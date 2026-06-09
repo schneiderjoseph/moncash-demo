@@ -7,6 +7,14 @@ const moncash = require('./lib/moncash');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+function normalizeOrderId(raw) {
+  const id = String(raw || '').trim();
+  if (!id) return id;
+  if (/^ORDER-/i.test(id)) return id;
+  if (/^\d+$/.test(id)) return `ORDER-${id}`;
+  return id;
+}
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
@@ -29,7 +37,7 @@ app.get('/', (req, res) => {
     <hr>
     <p>Ou vérifiez un paiement existant :</p>
     <form method="GET" action="/capture">
-      <label>Order ID <input name="orderId" placeholder="ORDER-001" required></label>
+      <label>Order ID <input name="orderId" placeholder="ORDER-1781043309838" required></label>
       <button type="submit">Capturer</button>
     </form>
   `);
@@ -51,7 +59,7 @@ app.post('/pay', async (req, res) => {
 
 app.get('/capture', async (req, res) => {
   try {
-    const orderId = String(req.query.orderId || '').trim();
+    const orderId = normalizeOrderId(req.query.orderId);
     const capture = await moncash.capture.getByOrderId(orderId);
 
     res.send(`
@@ -60,7 +68,8 @@ app.get('/capture', async (req, res) => {
       <a href="/">Retour</a>
     `);
   } catch (err) {
-    res.status(400).send(`<h1>Erreur capture</h1><pre>${err.message}</pre><a href="/">Retour</a>`);
+    const tried = normalizeOrderId(req.query.orderId);
+    res.status(400).send(`<h1>Erreur capture</h1><pre>${err.message}</pre><p>Order ID recherché : <code>${tried}</code></p><p>Utilise l'ID complet, ex. <code>ORDER-1781043309838</code></p><a href="/">Retour</a>`);
   }
 });
 
