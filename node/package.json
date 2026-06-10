@@ -6,12 +6,21 @@
   "scripts": {
     "start": "node server.js",
     "pay": "node scripts/create-payment.js",
-    "capture": "node scripts/capture-payment.js"
+    "capture": "node scripts/capture-payment.js",
+    "capture-tx": "node scripts/capture-transaction.js",
+    "customer": "node scripts/customer-status.js",
+    "prefunded-balance": "node scripts/prefunded-balance.js",
+    "prefunded-status": "node scripts/prefunded-status.js",
+    "transfert": "node scripts/create-transfert.js"
   },
-  "keywords": ["moncash", "demo", "sandbox"],
+  "keywords": [
+    "moncash",
+    "demo",
+    "sandbox"
+  ],
   "license": "MIT",
   "dependencies": {
-    "@zygrec/moncash": "^1.0.0",
+    "@zygrec/moncash": "^1.1.0",
     "dotenv": "^16.4.5",
     "express": "^4.21.0"
   }

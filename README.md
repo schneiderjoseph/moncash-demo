@@ -8,7 +8,7 @@ Ce dépôt regroupe des démos pour tester l'API MonCash (Digicel Haïti) avec d
 
 | Framework | Dossier | Statut |
 |-----------|---------|--------|
-| **Node.js** | [`node/`](./node/) | Disponible |
+| **Node.js** | [`node/`](./node/) | Disponible — toutes les APIs SDK 1.1.0 |
 | PHP | `php/` | Bientôt |
 | Python | `python/` | Bientôt |
 
