@@ -7,6 +7,8 @@ const moncash = require('./lib/moncash');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const NOTICE_BUSINESS = `Compte business MonCash requis (ou demander à Digicel l&apos;activation sur sandbox).`;
+
 function isSandbox() {
   return (process.env.MONCASH_MODE || 'sandbox') === 'sandbox';
 }
@@ -58,7 +60,7 @@ function resultPage(title, data, note) {
 }
 
 function errorPage(title, err) {
-  return page(title, `<pre>${err.message}</pre>`);
+  return page(title, `<pre>${err.message}</pre><p class="warn">${NOTICE_BUSINESS}</p>`);
 }
 
 app.use(express.urlencoded({ extended: true }));
@@ -73,7 +75,7 @@ app.get('/', (req, res) => {
   const refId = `TX-${Date.now()}`;
 
   res.send(page('MonCash SDK Demo', `
-    <p>Testez toutes les APIs du SDK <code>@zygrec/moncash</code> en <strong>${process.env.MONCASH_MODE || 'sandbox'}</strong>.</p>
+    <p>Testez les APIs du SDK <code>@zygrec/moncash</code> en <strong>${process.env.MONCASH_MODE || 'sandbox'}</strong>.</p>
 
     <section>
       <h2>Paiement entrant — <code>payment.create</code></h2>
@@ -108,7 +110,7 @@ app.get('/', (req, res) => {
         <label>Compte (509...) <input name="account" placeholder="50912345678" required></label>
         <button type="submit">Vérifier le compte</button>
       </form>
-      <p class="warn">Backend-only en production (risque d'énumération de comptes).</p>
+      <p class="warn">${NOTICE_BUSINESS}</p>
     </section>
 
     <section>
@@ -116,7 +118,7 @@ app.get('/', (req, res) => {
       <form method="GET" action="/prefunded/balance">
         <button type="submit">Lire le solde préfinancé</button>
       </form>
-      <p class="warn">Donnée sensible — backend only en production.</p>
+      <p class="warn">${NOTICE_BUSINESS}</p>
     </section>
 
     <section>
@@ -125,6 +127,7 @@ app.get('/', (req, res) => {
         <label>Reference <input name="reference" placeholder="TX-001" required></label>
         <button type="submit">Statut du virement</button>
       </form>
+      <p class="warn">${NOTICE_BUSINESS}</p>
     </section>
 
     <section>
@@ -135,9 +138,9 @@ app.get('/', (req, res) => {
         <label>Montant (HTG) <input name="amount" type="number" min="1" value="10" required></label>
         <label>Description <input name="desc" value="Demo payout" required></label>
         <label>Reference <input name="reference" value="${refId}" required></label>
-        <button type="submit" onclick="return confirm('Envoyer un virement sandbox ?')">Envoyer le transfert</button>
+        <button type="submit">Envoyer le transfert</button>
       </form>
-      <p class="warn">Payout irréversible — sandbox uniquement. Vérifie le numéro receiver avant d'envoyer.</p>
+      <p class="warn">${NOTICE_BUSINESS}</p>
       ` : '<p class="warn">Route désactivée en mode live.</p>'}
     </section>
   `));
